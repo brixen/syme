@@ -1,0 +1,89 @@
+#!/usr/bin/env rbx
+#
+# vim: filetype=ruby
+
+$:.unshift File.expand_path('../../lib', __FILE__)
+
+require 'syme'
+
+class SymeScript
+  def initialize
+    @evals = []
+    @ast    = false
+    @sexp   = false
+    @script = nil
+  end
+
+  def options(argv=ARGV)
+    options = Rubinius::Options.new "Usage: syme [options] [script]", 20
+
+    options.on "-", "Read and evaluate code from STDIN" do
+      @evals << STDIN.read
+    end
+
+    options.on "-c", "FILE", "Check the syntax of FILE" do |f|
+      begin
+        begin
+          Syme::Parser.new.parse_file f
+        rescue Syme::Syntax::SyntaxError => e
+          e.render
+          exit 1
+        end
+
+        puts "Syntax OK"
+        exit 0
+      end
+    end
+
+    options.on "-A", "Print the AST" do
+      @ast = true
+    end
+
+    options.on "-S", "Print the S-expression" do
+      @sexp = true
+    end
+
+    options.on "-e", "CODE", "Execute CODE" do |e|
+      @evals << e
+    end
+
+    options.on "-h", "--help", "Display this help" do
+      puts options
+      exit 0
+    end
+
+    options.doc ""
+
+    rest = options.parse(argv)
+    @script ||= rest.first
+  end
+
+  def evals
+    return if @evals.empty?
+  end
+
+  def script
+    return unless @script
+
+    if File.exists? @script
+
+      Syme::CodeLoader.execute_file @script
+    else
+      STDERR.puts "Unable to find '#{@script}' to run"
+      exit 1
+    end
+  end
+
+  def repl
+    return if @script
+  end
+
+  def main
+    options
+    evals
+    script
+    repl
+  end
+end
+
+SymeScript.new.main

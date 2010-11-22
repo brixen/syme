@@ -45,3 +45,5 @@ EOM
     end
   end
 end
+
+require 'syme/bootstrap/parser/ext/parser'

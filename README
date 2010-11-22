@@ -1,3 +1,22 @@
-An implementation of Newspeak on the Rubinius VM.
+What is Newspeak?
 
-See http://newspeaklanguage.org/.
+Newspeak is a programming language in the Smalltalk/Self tradition by Gilad
+Bracha,  Peter Ahe, Vassili Bykov, Eliot Miranda, Bill Maddox, and Yaron
+Kashai. See http://newspeaklanguage.org/.
+
+Newspeak is still an experimental language. Consequently, documentation for
+Newspeak is incomplete. A reference implementation runs in the Squeak system. 
+There appear to be two primary references:
+
+  "The Newspeak Programming Platform" May 6, 2008
+  "Newspeak Programming Language Draft Specification v0.05" Dec 11, 2009
+
+
+What is Syme?
+
+Syme is an implementation of Newspeak that runs on the Rubinius VM.
+
+Rather than use the existing Newspeak parser, a bootstrap parser and compiler
+using Ruby are being written. The disadvantage of this is the effort to ensure
+that the parser matches the current implementation. The advantage is a
+bootstrap system for Newspeak independent of Squeak/Smalltalk.
